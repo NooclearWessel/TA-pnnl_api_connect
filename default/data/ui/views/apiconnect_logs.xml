@@ -1,0 +1,230 @@
+<form version="1.1" theme="dark">
+  <label>apiconnect Modular Input Logs</label>
+  <description>Logs written from the apiconnect modular input</description>
+  <fieldset submitButton="false">
+    <input type="dropdown" token="host_tok">
+      <label>Host</label>
+      <fieldForLabel>host</fieldForLabel>
+      <fieldForValue>host</fieldForValue>
+      <search base="ta_logs">
+        <query>|dedup host</query>
+      </search>
+      <choice value="*">ALL</choice>
+      <default>*</default>
+      <initialValue>*</initialValue>
+    </input>
+    <input type="dropdown" id="mod_input_dd" token="mod_input_tok">
+      <label>Modular Input</label>
+      <fieldForLabel>input_name</fieldForLabel>
+      <fieldForValue>input_name</fieldForValue>
+      <search base="ta_logs">
+        <query>|dedup input_name</query>
+      </search>
+      <choice value="*">ALL</choice>
+      <default>*</default>
+      <initialValue>*</initialValue>
+    </input>
+    <input type="time" token="field1">
+      <label></label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <html>
+      <p style="font-size:10px">
+      </p>      
+    </html>
+    <input type="dropdown" id="job_id_dd" token="job_id_tok">
+      <label>Job ID</label>
+      <fieldForLabel>job_id</fieldForLabel>
+      <fieldForValue>job_id</fieldForValue>
+      <search base="ta_logs">
+        <query>|dedup job_id</query>
+      </search>
+      <choice value="*">ALL</choice>
+      <default>*</default>
+      <initialValue>*</initialValue>
+    </input>
+    <html>
+      <style>
+        #mod_input_dd { width: 425px; }
+        #mod_input_dd [data-component] { width: 400px !important; }
+        #job_id_dd { width: 700px; }
+        #job_id_dd [data-component] { width: 675px !important; }
+      </style>
+    </html>
+  </fieldset>
+  <row>
+    <panel depends="$alwaysHideCSS$">
+      <table>
+        <search id="ta_logs">
+          <query>index=_internal TA-pnnl_api_connect source="/*/splunk/var/log/splunk/ta-pnnl_api_connect*.log" job_id=* 
+| sort -_time 
+| table host, _time, input_name, job_id, job_status, message</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <single>
+        <title>Average Runtime</title>
+        <search base="ta_logs">
+          <query>| search host = $host_tok$ AND input_name = $mod_input_tok$ AND job_id = $job_id_tok$ 
+| stats max(_time) as maxtime min(_time) as mintime by host, input_name, job_id
+| eval difference=maxtime-mintime
+| stats avg(difference) as avg_runtime
+| eval avg_runtime=round(avg_runtime, 2)</query>
+        </search>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0.00</option>
+        <option name="rangeColors">["0x1182f3","0x1182f3"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="unit">seconds</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Not Finished</title>
+        <search base="ta_logs">
+          <query>| search host = $host_tok$ AND input_name = $mod_input_tok$ AND job_id = $job_id_tok$ 
+| sort _time 
+| stats last(job_status) as last_status by host, input_name, job_id
+| where last_status!="Error"
+| eval finished = if(last_status="Done", "Yes", "No")
+| where finished="No"
+| stats count</query>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0xd94e17","0xd94e17"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="underLabel">This could mean it is still running or there was a failure to log</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Done</title>
+        <search base="ta_logs">
+          <query>| search job_status="Done" AND host = $host_tok$ AND input_name = $mod_input_tok$ AND job_id = $job_id_tok$ 
+| stats count</query>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x118832","0x118832"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Errors</title>
+        <search base="ta_logs">
+          <query>| search job_status="Error" AND host = $host_tok$ AND input_name = $mod_input_tok$ AND job_id = $job_id_tok$ 
+| stats count</query>
+        </search>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0xd41f1f","0xdc4e41"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Warnings</title>
+        <search base="ta_logs">
+          <query>| search job_status="Warning" AND host = $host_tok$ AND input_name = $mod_input_tok$ AND job_id = $job_id_tok$ 
+| stats count</query>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0xcba700","0xcba700"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel depends="$panel_show_running$">
+      <table>
+        <title>RUNNING</title>
+        <search base="ta_logs">
+          <progress>
+            <condition match="'job.resultCount' &gt; 0">
+              <set token="panel_show_running">true</set>
+            </condition>
+            <condition>
+              <unset token="panel_show_running"></unset>
+            </condition>
+          </progress>
+          <query>| search host = $host_tok$ AND input_name = $mod_input_tok$ AND job_id = $job_id_tok$ 
+| sort _time 
+| eventstats last(job_status) as last_status by input_name, job_id, host
+| where last_status!="Done" AND last_status!="Error"
+| sort -_time 
+| eval Time = strftime(_time, "%Y-%m-%d %H:%M:%S")
+| table Time, host, input_name, job_id, job_status, message 
+| rename host AS Host, input_name AS "Modular Input", job_id AS "Job ID", job_status AS Status, message AS Message</query>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="rowNumbers">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel depends="$panel_show_errors$">
+      <table>
+        <title>ERRORS</title>
+        <search base="ta_logs">
+          <progress>
+            <condition match="'job.resultCount' &gt; 0">
+              <set token="panel_show_errors">true</set>
+            </condition>
+            <condition>
+              <unset token="panel_show_errors"></unset>
+            </condition>
+          </progress>
+          <query>| search job_status="Error" AND host = $host_tok$ AND input_name = $mod_input_tok$ AND job_id = $job_id_tok$ 
+| sort -_time 
+| eval Time = strftime(_time, "%Y-%m-%d %H:%M:%S")
+| table Time, host, input_name, job_id, job_status, message 
+| rename host AS Host, input_name AS "Modular Input", job_id AS "Job ID", job_status AS Status, message AS Message</query>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="rowNumbers">true</option>
+        <format type="color" field="Status">
+          <colorPalette type="map">{"Error":#D41F1F}</colorPalette>
+        </format>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>Job Logs</title>
+        <search base="ta_logs">
+          <query>| search host = $host_tok$ AND input_name = $mod_input_tok$ AND job_id = $job_id_tok$ 
+| sort -_time 
+| eval Time = strftime(_time, "%Y-%m-%d %H:%M:%S")
+| table Time, host, input_name, job_id, job_status, message 
+| rename host AS Host, input_name AS "Modular Input", job_id AS "Job ID", job_status AS Status, message AS Message</query>
+        </search>
+        <option name="count">20</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">true</option>
+        <format type="color" field="Status">
+          <colorPalette type="map">{"Start":#118832,"Running":#55C169,"Done":#118832,"Error":#D41F1F,"Debug":#1182F3,"Warning":#CBA700}</colorPalette>
+        </format>
+      </table>
+    </panel>
+  </row>
+</form>

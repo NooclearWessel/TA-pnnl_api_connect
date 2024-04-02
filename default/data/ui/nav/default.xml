@@ -1,0 +1,11 @@
+<nav>
+  <view name="inputs" default="true"/>
+  <view name="configuration"/>
+  <view name="credentials"/>
+  <collection label="Settings">
+    <view name="apiconnect_logs"/>
+    <view name="proxy"/>
+    <view name="search"/>
+    <view name="dashboards"/>    
+  </collection>
+</nav>

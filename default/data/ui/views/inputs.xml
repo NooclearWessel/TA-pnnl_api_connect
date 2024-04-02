@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<view template="TA-pnnl_api_connect:/templates/inputs.html" type="html">
+	<label>Inputs</label>
+</view>

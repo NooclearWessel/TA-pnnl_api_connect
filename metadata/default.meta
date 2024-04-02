@@ -1,0 +1,21 @@
+[]
+access = read : [ admin ], write : [ admin ]
+export = system
+
+# VIEWS
+
+[views/apiconnect_logs]
+export = none
+owner = nobody
+
+[views/configuration]
+export = none
+owner = nobody
+
+[views/inputs]
+export = none
+owner = nobody
+
+[views/proxy]
+export = none
+owner = nobody

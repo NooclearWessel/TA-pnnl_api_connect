@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<view template="TA-pnnl_api_connect:/templates/proxy.html" type="html">
+	<label>Proxy</label>
+</view>

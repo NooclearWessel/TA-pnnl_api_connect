@@ -1,0 +1,12 @@
+# EXCLUDE
+*.pyc
+.vscode/
+backups/
+local/*
+__pycache__
+metadata/local.meta
+
+# Include - Removing now that replication is taking care of these
+#!local/api_configs.conf
+#!local/api_providers.conf 
+#!local/api_proxy.conf
