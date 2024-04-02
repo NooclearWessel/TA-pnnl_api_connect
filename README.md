@@ -1,14 +1,14 @@
 ## CC0
 
-Released under the Creative Commons 0 Public Domain Dedication:  
-https://creativecommons.org/publicdomain/zero/1.0/ 
+Released under the Creative Commons 0 Public Domain Dedication:  https://creativecommons.org/publicdomain/zero/1.0/ 
   
-This material is free to use, and attribution is always appreciated.  Attribution may be as follows: 
+This material is free to use, and attribution is always appreciated. Attribution may be as follows: 
+
 Authored by Joshua Stratton at the Pacific Northwest National Laboratory, operated by Battelle for the U.S. Department of Energy.
 
 ## DESCRIPTION
 
-This Splunk Technology Add-On was developed as an API integration tool for Splunk. It delivers a modular input for ingesting API-based data into Splunk indexes. It also includes two custom commands for live reading of API data.
+This Splunk Technology Add-On was developed as an API integration tool for Splunk. It delivers a modular input for ingesting API-based data into Splunk indexes. It also includes two custom commands for live reading of API events.
 
 #### TA Views
 
@@ -58,5 +58,7 @@ Documentation on the custom commands can be found in the attached helpdocs folde
 ​    Authored by Joshua Stratton at the Pacific Northwest National Laboratory, operated by Battelle for the U.S. Department of Energy.
 
 ## SUPPORT
-​    Contact:   joshua.stratton@pnnl.gov
-    Important: External suggestions regarding modifications or support for this application, will only be considered when they solve challenges facing the operations and monitoring of Pacific Northwest National Laboratory assets.
+
+​   Important: External suggestions regarding modifications or support for this application, will only be considered when they solve challenges facing the operations and monitoring of Pacific Northwest National Laboratory assets.
+
+​   Contact: joshua.stratton@pnnl.gov
