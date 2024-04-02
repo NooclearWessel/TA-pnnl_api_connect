@@ -58,5 +58,7 @@ Documentation on the custom commands can be found in the attached helpdocs folde
 ​    Authored by Joshua Stratton at the Pacific Northwest National Laboratory, operated by Battelle for the U.S. Department of Energy.
 
 ## SUPPORT
+    Important: External suggestions regarding modifications or support for this application, will only be considered when they solve challenges facing the operations and monitoring 
+		of Pacific Northwest National Laboratory assets.
 
 ​    Contact: joshua.stratton@pnnl.gov
